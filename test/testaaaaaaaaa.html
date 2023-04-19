@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Carte de Bruxelles</title>
+    <link rel="stylesheet" href="leaflet.css" />
+    <script src="leaflet.js"></script>
+    <script src="jquery-3.6.4.min.js"></script>
+
+    <style>
+      #mapid {
+        height: 800px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="mapid"></div>
+    <script>
+      // Initialisation de la carte centrée sur Bruxelles
+      var mymap = L.map("mapid").setView([50.8466, 4.3528], 13);
+
+      // Ajout de la couche OpenStreetMap
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+        maxZoom: 18,
+      }).addTo(mymap);
+
+      // Récupération des données depuis le fichier CSV à l'aide de jQuery
+      $.ajax({
+        type: "GET",
+        url: "csvjson.csv",
+        dataType: "text",
+        success: function (data) {
+          // Conversion des données CSV en tableau JavaScript
+          var markers = $.csv.toObjects(data);
+
+          // Ajout des marqueurs sur la carte
+          for (var i = 0; i < markers.length; i++) {
+            var marker = L.marker([markers[i].lat, markers[i].lon]).addTo(
+              mymap
+            );
+            marker.bindPopup(markers[i].name);
+          }
+        },
+      });
+    </script>
+  </body>
+</html>
