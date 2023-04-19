@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Carte de Bruxelles</title>
+    <link rel="stylesheet" href="leaflet.css" />
+    <script src="leaflet.js"></script>
+    <script src="jquery-3.6.4.min.js"></script> <!-- chemin relatif ajouté ici -->
+
+    <style>
+      #mapid {
+        height: 800px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="mapid"></div>
+    <script>
+      var mymap = L.map("mapid").setView([50.8466, 4.3528], 13);
+	// Fond de plan
+      L.tileLayer("https://stamen-tiles-b.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.png", {
+        attribution:
+          'Map data &copy; <a href="http://maps.stamen.com/">Map tiles</a> by <a href="https://stamen.com/">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> |<br>Map data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>',
+        maxZoom: 18,
+      }).addTo(mymap);
+
+
+      // Création de l'icône personnalisée
+      var myIcon = L.icon({
+        iconUrl: 'croix_rouge.svg',
+        iconSize: [38, 38],
+        iconAnchor: [19, 38],
+        popupAnchor: [0, -30]
+      });
+
+      // Récupération des marqueurs depuis le fichier JSON à l'aide de jQuery
+      $.getJSON("csvjson.json", function (data) {
+        // Ajout des marqueurs sur la carte
+        for (var i = 0; i < data.length; i++) {
+          var latlng = L.latLng(data[i].Latitude, data[i].Longitude);
+          var marker = L.marker(latlng, {icon: myIcon}).addTo(mymap);		  
+          marker.bindPopup(data[i].Alias+"<br>"+data[i].description);
+        }
+      });
+    </script>
+  </body>
+</html>
