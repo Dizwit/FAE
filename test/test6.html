@@ -80,7 +80,15 @@
           var marker = event.target;
           sidebarTitle.innerText = marker.options.title;
           sidebarContent.innerHTML = '<p>' + marker.options.description + '</p>';
+		  
           sidebar.classList.add('show');
+		  
+		  // Définition des variables pour les photos ainsi que le chemin relatif ainsi que de la taille de l'image
+		  var photoId = marker.options.id;
+var photoPath = 'images/' + photoId + '.jpg';
+sidebarContent.innerHTML = '<p>' + marker.options.description + '</p><img src="' + photoPath + '" style="width:50%;">';
+
+
         }
 
         // Ajout des marqueurs sur la carte
@@ -89,7 +97,8 @@
           var marker = L.marker(latlng, {
             icon: myIcon,
             title: data[i].Alias,
-            description: data[i].description
+            description: data[i].description,
+			id: data[i].id
           }).addTo(mymap);
           marker.on('click', onMarkerClick);
         }
@@ -99,6 +108,8 @@
       var sidebar = document.getElementById('sidebar');
       var sidebarTitle = document.getElementById('sidebar-title');
       var sidebarContent = document.getElementById('sidebar-content');
+	  
+	  
     </script>
   </body>
 </html>
